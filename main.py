@@ -1,6 +1,7 @@
 # this allows us to use code from
 # the open-source pygame library
 # throughout this file
+import sys
 import pygame
 from constants import *
 from player import *
@@ -19,8 +20,10 @@ def main():
     updatable = pygame.sprite.Group() # group holding objects to be updated
     drawable = pygame.sprite.Group() # group holding objects to be drawn
     asteroids = pygame.sprite.Group() # group holding all asteroids which will spawn
+    shots = pygame.sprite.Group() # group holding all shots deployed in-game
 
     Player.containers = (updatable, drawable) # create Player objects AFTER this static field is made!
+    Shot.containers = (updatable, drawable, shots)
     Asteroid.containers = (updatable, drawable, asteroids) # likewise, create Asteroid objects AFTER...
     AsteroidField.containers = (updatable) # AsteroidField is not  drawn, nor is it an Asteroid object
 
@@ -45,6 +48,18 @@ def main():
         # draw each object in the drawable group
         for obj in drawable:
             obj.draw(screen)
+
+        # check collisions
+        for obj in asteroids:
+            if obj.is_colliding(player):
+                print("Game over!")
+                sys.exit()
+            else:
+                for s in shots:
+                    if obj.is_colliding(s):
+                        s.kill()
+                        obj.split()
+
 
         # TIME MANAGEMENT
         # refresh the screen
