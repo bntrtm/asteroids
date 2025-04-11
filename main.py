@@ -4,6 +4,8 @@
 import pygame
 from constants import *
 from player import *
+from asteroidfield import AsteroidField
+from asteroid import Asteroid
 
 def main():
     print("Starting Asteroids!")
@@ -16,10 +18,14 @@ def main():
 
     updatable = pygame.sprite.Group() # group holding objects to be updated
     drawable = pygame.sprite.Group() # group holding objects to be drawn
+    asteroids = pygame.sprite.Group() # group holding all asteroids which will spawn
 
     Player.containers = (updatable, drawable) # create Player objects AFTER this static field is made!
+    Asteroid.containers = (updatable, drawable, asteroids) # likewise, create Asteroid objects AFTER...
+    AsteroidField.containers = (updatable) # AsteroidField is not  drawn, nor is it an Asteroid object
 
     player = Player((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))
+    asteroid_field = AsteroidField()
     dt = 0 # delta time
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
