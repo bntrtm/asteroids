@@ -12,11 +12,19 @@ def main():
     pygame.init()
 
     clock = pygame.time.Clock()
+
+
+    updatable = pygame.sprite.Group() # group holding objects to be updated
+    drawable = pygame.sprite.Group() # group holding objects to be drawn
+
+    Player.containers = (updatable, drawable) # create Player objects AFTER this static field is made!
+
     player = Player((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))
     dt = 0 # delta time
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+    # GAME LOOP BEGINS HERE
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -24,9 +32,13 @@ def main():
         
 
         # DRAW SCREEN
-        player.update(dt)
+        updatable.update(dt) # update all objects in the updatable group
+
         screen.fill("black")
-        player.draw(screen)
+
+        # draw each object in the drawable group
+        for obj in drawable:
+            obj.draw(screen)
 
         # TIME MANAGEMENT
         # refresh the screen
